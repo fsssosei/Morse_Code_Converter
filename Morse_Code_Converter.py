@@ -81,7 +81,7 @@ char_from_morse_code = {
 morse_code_from_char = {value: key for key, value in dict.items(char_from_morse_code)}
 
 def Char_To_Unicode_number (one_character: chr) -> str:
-	return 'U+'+str.upper(str.zfill(str.lstrip(hex(ord(one_character)),'0x'), 4))  #和JS版本不同在于，hex函数转16进制会带“0x”前缀，JS的.toString(16)返回数不带前缀
+	return 'U+'+str.upper(str.zfill(str.lstrip(hex(ord(one_character)),'0x'), 4))
 
 def Unicode_number_To_Char (a_unicode_number: str) -> chr:
 	return chr(int(str.replace(str.upper(a_unicode_number), 'U+', '0x'), 16))
@@ -89,7 +89,7 @@ def Unicode_number_To_Char (a_unicode_number: str) -> chr:
 def Do_MCarr_Match (mcarr_key: str, match_type_flag: str) -> str:
 	"match_type_flag = 'char' or match_type_flag = 'code'"
 	if match_type_flag == 'char':
-		if len(mcarr_key) == 1:  #单个字符就转小写字符规范化下
+		if len(mcarr_key) == 1:
 			mcarr_key = str.lower(mcarr_key)
 		return dict.get(char_from_morse_code, mcarr_key)
 	elif match_type_flag == 'code':
@@ -97,26 +97,26 @@ def Do_MCarr_Match (mcarr_key: str, match_type_flag: str) -> str:
 
 def Telegraph_text_To_Morse_code (telegraph_text: str) -> list:
 	mess = []
-	for messarr in re.findall('(?:\{[\w #]+?\})|(?:.)', telegraph_text, re.S):  #依次 按“{...}” 或 单个字符 分割
+	for messarr in re.findall('(?:\{[\w #]+?\})|(?:.)', telegraph_text, re.S):
 		translated_string = Do_MCarr_Match(messarr, 'char')
 		if translated_string != None:
 			mess.append(translated_string)
-		else:  #译摩尔斯码尝试失败则转如下判别
-			if len(messarr) == 1:  #如是单个字符，则为非摩尔斯码表中字符，转译为“U+xxxx”样式Unicode再译摩尔斯码
-				mess.extend(Telegraph_text_To_Morse_code(Char_To_Unicode_number(messarr)))  #这递归返回一个列表，所以用extend方法添加
+		else:
+			if len(messarr) == 1:
+				mess.extend(Telegraph_text_To_Morse_code(Char_To_Unicode_number(messarr)))
 			else:
-				mess.append('{#}')  #错误的“{#}”项无法翻译会返回“{#}”
+				mess.append('{#}')
 	return mess
 
 def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 	mess = ''
-	for messarr in re.finditer('([.-]+)|( {4,})|(\{#\})', morse_code_text):  #依次找出 摩尔斯码 或 4个及以上空格 或 “{#}”
-		if messarr.group(1) != None:  #有找出摩尔斯码，则译码
+	for messarr in re.finditer('([.-]+)|( {4,})|(\{#\})', morse_code_text):
+		if messarr.group(1) != None:
 			translated_string = Do_MCarr_Match(messarr.group(1), 'code')
 			if translated_string == None :
-				translated_string = '{#}'  #错误的摩尔斯码无法译出就给出“{#}”
+				translated_string = '{#}'
 			mess += translated_string
-		elif messarr.group(2) != None:  #有找出空格，4或7空格转首个1空格，大于7的按增量4计算1空格
+		elif messarr.group(2) != None:
 			space_len = len(messarr.group(2))
 			if space_len == 7:
 				mess += ' '
@@ -124,14 +124,14 @@ def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 				mess += ' '* (space_len // 4)
 			else:
 				mess += ' '* (1 + (space_len - 7) // 4)
-		elif messarr.group(3) != None:  #有找出错误标志“{#}”，原样输出
+		elif messarr.group(3) != None:
 			mess += messarr.group(3)
 	return mess
 
 def Do_Morse_Encrypt (telegraph_text: str) -> str:
-	'电报文本译为摩尔斯码就调用这个函数'
-	return str.join('   ', Telegraph_text_To_Morse_code(telegraph_text))  #电码间用三空格间隔连成摩尔斯码字符串
+	'The function is called when the telegraph text is translated into Morse code'
+	return str.join('   ', Telegraph_text_To_Morse_code(telegraph_text))  #A three - space interval is used to form a Morse code string
 
 def Do_Morse_Decrypt (morse_code_text: str) -> str:
-	'摩尔斯码译为电报文本就调用这个函数'
+	'This function is called when Morse code is translated into telegraph text'
 	return re.sub('(?i:U\+[0-9A-F]{4})', lambda regex_match: Unicode_number_To_Char(regex_match.group()), Morse_code_To_Telegraph_text(morse_code_text))  #先把译出来的电报字符连成字符串，再找出“U+四个hex数”样式替换成对应字符
