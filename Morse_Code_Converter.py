@@ -134,4 +134,4 @@ def Do_Morse_Encrypt (telegraph_text: str) -> str:
 
 def Do_Morse_Decrypt (morse_code_text: str) -> str:
 	'This function is called when Morse code is translated into telegraph text'
-	return re.sub('(?i:U\+[0-9A-F]{4})', lambda regex_match: Unicode_number_To_Char(regex_match.group()), Morse_code_To_Telegraph_text(morse_code_text))  #先把译出来的电报字符连成字符串，再找出“U+四个hex数”样式替换成对应字符
+	return re.sub('(?i:U\+[0-9A-F]{4})', lambda regex_match: Unicode_number_To_Char(regex_match.group()), Morse_code_To_Telegraph_text(morse_code_text))
