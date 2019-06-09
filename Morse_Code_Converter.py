@@ -113,7 +113,7 @@ def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 	for messarr in re.finditer('([.-]+)|( {4,})|(\{#\})', morse_code_text):
 		if messarr.group(1) != None:
 			translated_string = Do_MCarr_Match(messarr.group(1), 'code')
-			if translated_string == None :
+			if translated_string is None :
 				translated_string = '{#}'
 			mess += translated_string
 		elif messarr.group(2) != None:
