@@ -1,4 +1,3 @@
-# Morse_Code_Converter
 
 <img src="https://scrutinizer-ci.com/g/fsssosei/Morse_Code_Converter/badges/quality-score.png?b=master" />
 <img src="https://scrutinizer-ci.com/g/fsssosei/Morse_Code_Converter/badges/build.png?b=master" />
