@@ -99,7 +99,7 @@ def Telegraph_text_To_Morse_code (telegraph_text: str) -> list:
 	mess = []
 	for messarr in re.findall('(?:\{[\w #]+?\})|(?:.)', telegraph_text, re.S):
 		translated_string = Do_MCarr_Match(messarr, 'char')
-		if translated_string != None:
+		if translated_string is not None:
 			mess.append(translated_string)
 		else:
 			if len(messarr) == 1:
@@ -111,12 +111,12 @@ def Telegraph_text_To_Morse_code (telegraph_text: str) -> list:
 def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 	mess = ''
 	for messarr in re.finditer('([.-]+)|( {4,})|(\{#\})', morse_code_text):
-		if messarr.group(1) != None:
+		if messarr.group(1) is not None:
 			translated_string = Do_MCarr_Match(messarr.group(1), 'code')
 			if translated_string is None :
 				translated_string = '{#}'
 			mess += translated_string
-		elif messarr.group(2) != None:
+		elif messarr.group(2) is not None:
 			space_len = len(messarr.group(2))
 			if space_len == 7:
 				mess += ' '
@@ -124,7 +124,7 @@ def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 				mess += ' '* (space_len // 4)
 			else:
 				mess += ' '* (1 + (space_len - 7) // 4)
-		elif messarr.group(3) != None:
+		elif messarr.group(3) is not None:
 			mess += messarr.group(3)
 	return mess
 
