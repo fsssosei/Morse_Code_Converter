@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 '''
 Morse Code Converter(Unicode)
 Copyright (C) 2020 sosei
