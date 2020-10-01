@@ -81,7 +81,7 @@ char_from_morse_code = {
 morse_code_from_char = {value: key for key, value in dict.items(char_from_morse_code)}
 
 def Char_To_Unicode_number (one_character: chr) -> str:
-	return 'U+'+str.upper(str.zfill(str.lstrip(hex(ord(one_character)),'0x'), 4))
+	return 'U+' + str.upper(str.zfill(str.lstrip(hex(ord(one_character)), '0x'), 4))
 
 def Unicode_number_To_Char (a_unicode_number: str) -> chr:
 	return chr(int(str.replace(str.upper(a_unicode_number), 'U+', '0x'), 16))
