@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Morse Code Converter(Unicode)
-Copyright (C) 2018 sosei
+Copyright (C) 2020 sosei
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -110,7 +110,7 @@ def Telegraph_text_To_Morse_code (telegraph_text: str) -> list:
 
 def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 	mess = ''
-	for messarr in re.finditer('([.-]+)|( {4,})|(\{#\})', morse_code_text):
+	for messarr in re.finditer('([.-]+)|( {3,})|(\{#\})', morse_code_text):
 		if messarr.group(1) is not None:
 			translated_string = Do_MCarr_Match(messarr.group(1), 'code')
 			if translated_string is None :
@@ -118,19 +118,17 @@ def Morse_code_To_Telegraph_text (morse_code_text: str) -> str:
 			mess += translated_string
 		elif messarr.group(2) is not None:
 			space_len = len(messarr.group(2))
-			if space_len == 7:
+			if space_len == 3:
 				mess += ' '
-			elif space_len % 4 == 0:
-				mess += ' '* (space_len // 4)
 			else:
-				mess += ' '* (1 + (space_len - 7) // 4)
+				mess += ' ' * (1 + (space_len - 3) // 2)
 		elif messarr.group(3) is not None:
 			mess += messarr.group(3)
 	return mess
 
 def Do_Morse_Encrypt (telegraph_text: str) -> str:
 	'The function is called when the telegraph text is translated into Morse code'
-	return str.join('   ', Telegraph_text_To_Morse_code(telegraph_text))  #A three - space interval is used to form a Morse code string
+	return str.join(' ', Telegraph_text_To_Morse_code(telegraph_text))  #A three - space interval is used to form a Morse code string
 
 def Do_Morse_Decrypt (morse_code_text: str) -> str:
 	'This function is called when Morse code is translated into telegraph text'
